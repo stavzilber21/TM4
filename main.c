@@ -1,23 +1,32 @@
+#include <stdio.h>
+#include "graph.h"
 int main(){
-
-    // to get the word
-    int i = 0;
-    do
+    pnode n = NULL;
+    pnode *head = &n;
+    char index;
+    while (scanf("%c", &index) != EOF)
     {
-        scanf("%c", &ch_w);
-        word[i] = ch_w;
-        i++;
-    } while (ch_w != '\t' && ch_w != '\n' && ch_w != ' ');
-    word[i-1]='\0';
-
-    // to get the txt
-    i = 0;
-    do
-    {
-        scanf("%c", &ch_t);
-        txt[i] = ch_t;
-        i++;
-    } while (ch_t != '~');
-   txt[i-1]='\0';
-
+        if (index == 'A'){
+            build_graph_cmd(head);
+        }
+        else if (index == 'B'){
+            insert_node_cmd(head);
+        }
+        else if (index == 'D'){
+            delete_node_cmd(head);
+        }
+        // else if (index == 'S'){
+        //     int src;
+        //     int dest;
+        //     scanf("%d, %d\n", &src, &dest);
+        //     int shortsPath = shortsPath_cmd(*head, src, dest);
+        //     printf("the shortest path is: %d \n", shortsPath);
+        // }
+        // else if (index == 'T'){
+        //     int tsp = TSP_cmd(*head);
+        //     printf("the TSP shortest path is: %d \n", tsp);
+        // }
+    }
+    deleteGraph_cmd(head);
+    return 0;
 }
