@@ -5,9 +5,9 @@
 void build_graph_cmd(pnode *head)
 {
     deleteGraph_cmd(head);
-    int size;
+    int size = 0;
     scanf("%d", &size);
-    char n;
+    char n = 'B';
     scanf("%c", &n);
     for (int i = 0; i < size; ++i)
     {
