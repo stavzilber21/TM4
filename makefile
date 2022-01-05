@@ -1,25 +1,3 @@
-# CC = gcc
-# AR = ar
-# FLAGS = -Wall -g
-
-# all: graph
-
-# main.o: main.c graph.h
-# 	$(CC) $(FLAGS) -c main.c
-
-# graph.o: graph.c graph.h
-# 	$(CC) $(FLAGS) -c graph.c 
-
-# libgraph.a: graph.o
-# 	$(AR) -rcs libgraph.a graph.o
-
-# graph: main.o libgraph.a 
-# 	$(CC) $(FLAGS) -o graph main.o libgraph.a 
-
-# .PHONY: clean all
-# clean: 
-# 	rm -f *.o *.so libgraph.a graph
-
 CC = gcc
 FLAGS = -Wall -g
 AR = ar

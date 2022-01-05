@@ -9,6 +9,7 @@ int main(){
     {
         if (index == 'A'){
             build_graph_cmd(head);
+            printGraph_cmd(*head);
         }
         else if (index == 'B'){
             insert_node_cmd(head);

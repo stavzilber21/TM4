@@ -24,14 +24,7 @@ typedef struct GRAPH_NODE_ {
 // } dijkstra, *pdijkstra;
 
 
-typedef struct Dijkstra_Node
-{
-    pnode node;
-    struct Dijkstra_Node *dad;
-    int weight;
-    int isUse;
-    struct Dijkstra_Node *next;
-} Dnode, *pDnode;
+
 
 
 pnode getNode(int id, pnode *head);

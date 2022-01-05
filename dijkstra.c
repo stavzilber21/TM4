@@ -2,6 +2,14 @@
 #include <stdlib.h>
 #include "graph.h"
 
+typedef struct Dijkstra_Node
+{
+    pnode node;
+    struct Dijkstra_Node *dad;
+    int weight;
+    int isUse;
+    struct Dijkstra_Node *next;
+} Dnode, *pDnode;
 
 pnode graph;
 int weight;
