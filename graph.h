@@ -23,7 +23,7 @@ typedef struct dijkstra
     int weight;
     int isUse;
     struct dijkstra *next;
-} Dnode, *pDnode;
+} dij_node, *p_dij_node;
 
 void build_graph_cmd(pnode *head);
 void insert_node_cmd(pnode *head);

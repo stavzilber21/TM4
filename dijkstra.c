@@ -3,26 +3,21 @@
 #include "graph.h"
 
 
-pDnode buildDijkstra_NodeList(pnode start, int src)
-{
-    pDnode head = NULL;
-    pDnode *index = &head;
-    while (start != NULL)
-    {
-        (*index) = (pDnode)malloc(sizeof(Dnode));
-        if ((*index) == NULL)
-        {
+p_dij_node buildDijkstra_NodeList(pnode start, int src){
+    p_dij_node head = NULL;
+    p_dij_node *index = &head;
+    while (start != NULL){
+        (*index) = (p_dij_node)malloc(sizeof(dij_node));
+        if ((*index) == NULL){
             return NULL;
         }
         
         (*index)->node = start;
-        if (start->node_num == src)
-        {
+        if (start->node_num == src){
             (*index)->dad = (*index);
             (*index)->weight = 0;
         }
-        else
-        {
+        else{
             (*index)->dad = NULL;
             (*index)->weight = infinity;
         }
@@ -33,58 +28,44 @@ pDnode buildDijkstra_NodeList(pnode start, int src)
     }
     return head;
 }
-void deleteList(pDnode list) {
-    while (list != NULL)
-    {
-        pDnode temp = list;
+void deleteList(p_dij_node list){
+    while (list != NULL){
+        p_dij_node temp = list;
         list = list->next;
         free(temp);
     }
 }
-pDnode getPDnode(pDnode list, int want)
-{
-    while (list != NULL)
-    {
-        if (list->node->node_num == want)
-        {
+p_dij_node getPDnode(p_dij_node list, int want){
+    while (list != NULL){
+        if (list->node->node_num == want){
             return list;
         }
         list = list->next;
     }
     return NULL;
 }
-pDnode minInList(pDnode head)
-{
-    pDnode ans = NULL;
-    while (head != NULL)
-    {
-        if (!head->isUse && head->weight < infinity && (ans == NULL || ans->weight < head->weight))
-        {
+p_dij_node minInList(p_dij_node head){
+    p_dij_node ans = NULL;
+    while (head != NULL){
+        if (!head->isUse && head->weight < infinity && (ans == NULL || ans->weight < head->weight)){
             ans = head;
         }
         head = head->next;
     }
-    if (ans != NULL)
-    {
+    if (ans != NULL){
         ans->isUse = 1;
     }
     return ans;
 }
-int shortsPath_cmd(pnode head, int src, int dest)
-{
-    pDnode list = buildDijkstra_NodeList(head, src);
-
-    pDnode u = minInList(list);
-    while (u != NULL)
-    {
+int shortsPath_cmd(pnode head, int src, int dest){
+    p_dij_node list = buildDijkstra_NodeList(head, src);
+    p_dij_node u = minInList(list);
+    while (u != NULL){
         pedge edgeIndex = u->node->edges;
-        while (edgeIndex != NULL)
-        {
-            //relax
-            pDnode v = getPDnode(list, edgeIndex->endpoint->node_num);
+        while (edgeIndex != NULL){
+            p_dij_node v = getPDnode(list, edgeIndex->endpoint->node_num);
             int newDist = u->weight + edgeIndex->weight;
-            if (v->weight > newDist)
-            {
+            if (v->weight > newDist){
                 v->weight = newDist;
                 v->dad = u;
             }
