@@ -1,120 +1,21 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include "graph.h"
+#include <stdlib.h>
 
-void build_graph_cmd(pnode *head){
-    deleteGraph_cmd(head);
-    int size = 0;
-    scanf("%d", &size);
-    char n = 'A';
-    scanf("%c", &n);
-    for (int i = 0; i < size; ++i){
-        scanf("%c", &n);
-        insert_node_cmd(head);
-    }
-}
 
-pnode getNode(pnode *head, int id){
-    pnode curr = *head;
-    while (curr != NULL){
-        if (curr->node_num == id){
-            return curr;
-        }
-        curr = curr->next;
+pnode getNode(int id, pnode *head){
+    pnode copy = *head;
+    while(copy!=NULL) { 
+        if(copy->node_num==id){
+            return copy;}
+        
+        copy = copy->next;   
     }
     return NULL;
+
 }
 
-void insert_node_cmd(pnode *head){
-    int data = 0;
-    scanf("%d", data);
-    pnode new = getNode(head, data);
-    if (new == NULL){
-        new = (pnode)malloc(sizeof(node)); //allocate memory to the new node
-        if (new == NULL){
-            return;
-        }
-        new->node_num = data;
-        new->next = *head; //add new to the list start
-        new->edges = NULL;
-        *head = new;
-    }
-    else{ // if the vertex already exists
-        pedge ed = new->edges;
-        while (ed != NULL){
-            pedge temp = ed;
-            ed = ed ->next;
-            free(temp);    //erase all the edges that enter it
-        }
-        new->edges = NULL;
-    }
-    pedge *newEdge = &(new->edges);
-    int dest = -1;
-    int isDone = scanf("%d", &dest);
-    while (isDone != 0 && isDone != EOF)
-    {
-        pnode destNode = getNode(head, dest);
-        if (destNode == NULL)
-        {
-            destNode = (pnode)malloc(sizeof(node));
-            if (destNode == NULL)
-            {
-                return;
-            }
-            destNode->node_num = dest;
-            destNode->edges = NULL;
-            destNode->next = *head;
-            *head = destNode;
-        }
-        int weight = -1;
-        scanf("%d", &weight);
 
-        *newEdge = (pedge)malloc(sizeof(edge));
-        if ((*newEdge) == NULL)
-        {
-            return;
-        }
-        (*newEdge)->dest = destNode;
-        (*newEdge)->weight = weight;
-        (*newEdge)->next = NULL;
-        newEdge = &((*newEdge)->next);
-        isDone = scanf("%d", &dest);
-    }
-}
-void printGraph_cmd(pnode head)
-{
-    pnode nodeIndex = head;
-    while (nodeIndex != NULL)
-    {
-        printf("Node %d: ", nodeIndex->node_num);
-        pedge edgeIndex = nodeIndex->edges;
-        while (edgeIndex != NULL)
-        {
-            printf("dest %d: weight %d, ", edgeIndex->dest->node_num, edgeIndex->weight);
-            edgeIndex = edgeIndex->next;
-        }
-        printf("\n");
-        nodeIndex = nodeIndex->next;
-    }
-}
-void deleteGraph_cmd(pnode *head)
-{
-    pnode nodeIndex = *head;
-    while (nodeIndex != NULL)
-    {
-        pedge edgeIndex = nodeIndex->edges;
-        while (edgeIndex != NULL)
-        {
-            pedge temp = edgeIndex;
-            edgeIndex = edgeIndex->next;
-            free(temp);
-        }
-        pnode temp = nodeIndex;
-        nodeIndex = nodeIndex->next;
-        free(temp);
-    }
-    *head = NULL;
-}
 void delete_node_cmd(pnode *head)
 {
     int key = -1;
@@ -188,3 +89,117 @@ void delete_node_cmd(pnode *head)
         free(remove);
     }
 }
+
+
+void insert_node_cmd(pnode *head){
+    int id = -1;
+    scanf("%d", &id);
+    pnode src = getNode(id,head);
+
+    if (src == NULL)
+    {
+        src = (pnode)malloc(sizeof(node));
+        if (src == NULL)
+        {
+            return;
+        }
+        src->node_num = id;
+        src->next = *head;
+        src->edges = NULL;
+        *head = src;
+    }
+    else
+    {
+        pedge index = src->edges;
+        while (index != NULL)
+        {
+            pedge temp = index->next;
+            free(index);
+            index = temp;
+        }
+        src->edges = NULL;
+    }
+    pedge *lastEdge = &(src->edges);
+    int dest = -1;
+    int isDone = scanf("%d", &dest);
+    while (isDone != 0 && isDone != EOF)
+    {
+        pnode destNode = getNode(dest,head);
+        if (destNode == NULL)
+        {
+            destNode = (pnode)malloc(sizeof(node));
+            if (destNode == NULL)
+            {
+                return;
+            }
+            destNode->node_num = dest;
+            destNode->edges = NULL;
+            destNode->next = *head;
+            *head = destNode;
+        }
+        int weight = -1;
+        scanf("%d", &weight);
+
+        *lastEdge = (pedge)malloc(sizeof(edge));
+        if ((*lastEdge) == NULL)
+        {
+            return;
+        }
+        (*lastEdge)->dest = destNode;
+        (*lastEdge)->weight = weight;
+        (*lastEdge)->next = NULL;
+        lastEdge = &((*lastEdge)->next);
+        isDone = scanf("%d", &dest);
+    }
+}
+
+
+void printGraph_cmd(pnode head){
+    pnode tempNode = head;
+    while (tempNode != NULL)
+    {
+        printf("Node: %d ", tempNode->node_num);
+        pedge tempEdge = tempNode->edges;
+        while (tempEdge != NULL)
+        {
+            printf("dest: %d weight: %d ", tempEdge->dest->node_num,tempEdge->weight);
+            tempEdge = tempEdge->next;
+        }
+        tempNode = tempNode->next;
+    }
+}
+
+
+void deleteGraph_cmd(pnode *head){
+    pnode nodeCurr = *head;
+    while (nodeCurr!=NULL){
+       pedge edgesCurr = nodeCurr->edges;
+       while (edgesCurr!=NULL){
+            pedge temp = edgesCurr;
+            edgesCurr = edgesCurr->next;
+            free(temp);
+       }
+       pnode temp = nodeCurr;
+       nodeCurr=nodeCurr->next;
+       free(temp);
+    }
+    *head=NULL;
+}
+
+void build_graph_cmd(pnode *head){
+    deleteGraph_cmd(head);
+    int size = 0;
+    scanf("%d", &size);
+    char n = 'B';
+    scanf("%c", &n);
+    for (int i = 0; i < size; ++i)
+    {
+        scanf("%c", &n);
+        insert_node_cmd(head);
+    }
+}
+
+
+
+
+
