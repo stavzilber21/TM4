@@ -7,7 +7,7 @@ void build_graph_cmd(pnode *head)
     deleteGraph_cmd(head);
     int size = 0;
     scanf("%d", &size);
-    char n = 'B';
+    char n = 'A';
     scanf("%c", &n);
     for (int i = 0; i < size; ++i)
     {
