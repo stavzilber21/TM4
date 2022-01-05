@@ -27,8 +27,8 @@ AR = ar
 all: graph
 
 
-graph: main.o libgraph.a 
-	$(CC) $(FLAGS) -o graph main.o libgraph.a 
+graph: main.o graphlib.a
+	$(CC) $(FLAGS) -o graph main.o graphlib.a
 
 main.o: main.c graph.h 
 	$(CC) $(FLAGS) -c main.c 
@@ -40,7 +40,7 @@ graph.o: graph.c graph.h
 	$(CC) $(FLAGS) -c graph.c
 
 graphlib.a: dijkstra.o graph.o
-	$(AR) -rcs libgraph.a  dijkstra.o graph.o
+	$(AR) -rcs graphlib.a dijkstra.o graph.o
 
 .PHONY: clean all
 clean: 
