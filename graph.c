@@ -26,7 +26,7 @@ pnode getNode(pnode *head, int id){
 }
 
 void insert_node_cmd(pnode *head){
-    int data;
+    int data = 0;
     scanf("%d", data);
     pnode new = getNode(head, data);
     if (new == NULL){
@@ -44,7 +44,7 @@ void insert_node_cmd(pnode *head){
         while (ed != NULL){
             pedge temp = ed;
             ed = ed ->next;
-            free(temp);     //erase all the edges that enter it
+            free(temp);    //erase all the edges that enter it
         }
         new->edges = NULL;
     }
