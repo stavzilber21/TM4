@@ -1,31 +1,34 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include "graph.h"
-int main(){
-    pnode n = NULL;
-    pnode *head = &n;
-    char index;
-    while (scanf("%c", &index) != EOF)
+int main()
+{
+    pnode temp = NULL;
+    pnode *head = &temp;
+    char input = '\0';
+    while (scanf("%c", &input) != EOF)
     {
-        if (index == 'A'){
+        if (input == 'A')
+        {
             build_graph_cmd(head);
         }
-        else if (index == 'B'){
+        else if (input == 'B')
+        {
             insert_node_cmd(head);
         }
-        else if (index == 'D'){
+        else if (input == 'D')
+        {
             delete_node_cmd(head);
         }
-        else if (index == 'S'){
-            int src;
-            int dest;
-            scanf("%d, %d\n", &src, &dest);
-            int dis = shortsPath_cmd(*head,src,dest);
+        else if (input == 'S')
+        {
+            int src = -1, dest = -1;
+            scanf("%d %d", &src, &dest);
+            int dis = shortsPath_cmd(*head, src, dest);
             printf("Dijsktra shortest path: %d \n", dis);
         }
-        else if (index == 'T'){
-            int tsp = TSP_cmd(*head);
-            printf("the TSP shortest path is: %d \n", tsp);
+        else if (input == 'T') {
+            int weight = TSP_cmd(*head);
+            printf("TSP shortest path: %d \n", weight);
         }
     }
     deleteGraph_cmd(head);
