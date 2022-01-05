@@ -21,7 +21,7 @@ p_dij_node buildDijkstra_NodeList(pnode start, int src){
             (*index)->dad = NULL;
             (*index)->weight = infinity;
         }
-        (*index)->isUse = 0;
+        (*index)->isIn = 0;
         (*index)->next = NULL;
         index = &((*index)->next);
         start = start->next;
@@ -47,13 +47,13 @@ p_dij_node getPDnode(p_dij_node list, int want){
 p_dij_node minInList(p_dij_node head){
     p_dij_node ans = NULL;
     while (head != NULL){
-        if (!head->isUse && head->weight < infinity && (ans == NULL || ans->weight < head->weight)){
+        if (!head->isIn && head->weight < infinity && (ans == NULL || ans->weight < head->weight)){
             ans = head;
         }
         head = head->next;
     }
     if (ans != NULL){
-        ans->isUse = 1;
+        ans->isIn = 1;
     }
     return ans;
 }
@@ -63,7 +63,7 @@ int shortsPath_cmd(pnode head, int src, int dest){
     while (u != NULL){
         pedge edgeIndex = u->node->edges;
         while (edgeIndex != NULL){
-            p_dij_node v = getPDnode(list, edgeIndex->endpoint->node_num);
+            p_dij_node v = getPDnode(list, edgeIndex->dest->node_num);
             int newDist = u->weight + edgeIndex->weight;
             if (v->weight > newDist){
                 v->weight = newDist;

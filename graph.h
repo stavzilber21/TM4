@@ -5,7 +5,7 @@ typedef struct GRAPH_NODE_ *pnode;;
 
 typedef struct edge_ {
     int weight;
-    pnode endpoint;
+    pnode dest;
     struct edge_ *next;
 } edge, *pedge;
 
@@ -21,7 +21,7 @@ typedef struct dijkstra
     pnode node;
     struct dijkstra *dad;
     int weight;
-    int isUse;
+    int isIn;
     struct dijkstra *next;
 } dij_node, *p_dij_node;
 
