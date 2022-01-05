@@ -1,7 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "graph.h"
-
+typedef struct dijkstra
+{
+    pnode node;
+    struct dijkstra *dad;
+    int weight;
+    int isUse;
+    struct dijkstra *next;
+} Dnode, *pDnode;
 
 pDnode buildDijkstra_NodeList(pnode start, int src)
 {
