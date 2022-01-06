@@ -17,11 +17,11 @@ int main(){
             delete_node_cmd(head);
         }
         else if (index == 'S'){
-            int src;
-            int dest;
+            int src=-1;
+            int dest=-1;
             scanf("%d, %d\n", &src, &dest);
-            int dis = shortsPath_cmd(*head,src,dest);
-            printf("Dijsktra shortest path: %d \n", dis);
+            int dist = shortsPath_cmd(*head,src,dest);
+            printf("the shortest path is: %d \n", dist);
         }
         else if (index == 'T'){
             int tsp = TSP_cmd(*head);

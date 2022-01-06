@@ -16,156 +16,96 @@ pnode getNode(int id, pnode *head){
 }
 
 
-void delete_node_cmd(pnode *head)
-{
-    int key = -1;
-    scanf("%d", &key);
-    pnode nodeIndex = *head;
-    pnode *isFirst = NULL;
-    pnode prevAns = NULL;
-    if (nodeIndex->node_num == key)
-    {
-        isFirst = head;
+void delete_node_cmd(pnode *head){
+    int data = -1;
+    scanf("%d", &data);
+    pnode copy = *head;
+    if(!head){
+        return;
     }
-
-    while (nodeIndex != NULL)
-    {
-        if (nodeIndex->next != NULL && nodeIndex->next->node_num == key)
-        {
-            prevAns = nodeIndex;
-        }
-        if (nodeIndex->edges != NULL && nodeIndex->edges->dest->node_num == key)
-        {
-            pedge temp = nodeIndex->edges;
-            nodeIndex->edges = nodeIndex->edges->next;
-            free(temp);
-            nodeIndex = nodeIndex->next;
-            continue;
-        }
-        pedge edgeIndex = nodeIndex->edges;
-        if (edgeIndex != NULL)
-        {
-            while (edgeIndex->next != NULL)
-            {
-                if (edgeIndex->next->dest->node_num == key)
-                {
-                    pedge temp = edgeIndex->next;
-                    edgeIndex->next = temp->next;
-                    free(temp);
-                }
-                else
-                {
-                    edgeIndex = edgeIndex->next;
-                }
-            }
-        }
-        nodeIndex = nodeIndex->next;
+    while(copy!=NULL){
+        if(copy->node_num==data){
+            pedge Edge = copy->edges;
+            while (Edge != NULL) {
+                pedge temp = Edge;
+                Edge = Edge->next;
+                free(temp);
+            } 
+        } 
+        else
+            copy = copy->next;
     }
-
-    if (isFirst != NULL)
-    {
-        pedge edgeIndex = (*isFirst)->edges;
-        while (edgeIndex != NULL)
-        {
-            pedge temp = edgeIndex;
-            edgeIndex = edgeIndex->next;
-            free(temp);
-        }
-        pnode temp = *isFirst;
-        *isFirst = temp->next;
-        free(temp);
-    }
-    else if (prevAns != NULL)
-    {
-        pnode remove = prevAns->next;
-        pedge edgeIndex = remove->edges;
-        while (edgeIndex != NULL)
-        {
-            pedge temp = edgeIndex;
-            edgeIndex = edgeIndex->next;
-            free(temp);
-        }
-        prevAns->next = remove->next;
-        free(remove);
-    }
+    free(copy);  
 }
 
 
 void insert_node_cmd(pnode *head){
-    int id = -1;
-    scanf("%d", &id);
-    pnode src = getNode(id,head);
+    int data = -1;
+    scanf("%d", &data);
+    pnode x = getNode(data,head);
 
-    if (src == NULL)
-    {
-        src = (pnode)malloc(sizeof(node));
-        if (src == NULL)
+    if (x == NULL){
+        x = (pnode)malloc(sizeof(node));
+        if (x == NULL)
         {
             return;
         }
-        src->node_num = id;
-        src->next = *head;
-        src->edges = NULL;
-        *head = src;
+        x->node_num = data;
+        x->next = *head;
+        x->edges = NULL;
+        *head = x;
     }
-    else
-    {
-        pedge index = src->edges;
-        while (index != NULL)
-        {
-            pedge temp = index->next;
-            free(index);
-            index = temp;
+    else{
+        pedge i = x->edges;
+        while (i != NULL){
+            pedge temp = i->next;
+            free(i);
+            i = temp;
         }
-        src->edges = NULL;
+        x->edges = NULL;
     }
-    pedge *lastEdge = &(src->edges);
+    pedge *newEdge = &(x->edges);
     int dest = -1;
-    int isDone = scanf("%d", &dest);
-    while (isDone != 0 && isDone != EOF)
-    {
-        pnode destNode = getNode(dest,head);
-        if (destNode == NULL)
-        {
-            destNode = (pnode)malloc(sizeof(node));
-            if (destNode == NULL)
-            {
+    int j = scanf("%d", &dest);
+    while (j != 0 && j != EOF){
+        pnode n_dest = getNode(dest,head);
+        if (n_dest == NULL){
+            n_dest = (pnode)malloc(sizeof(node));
+            if (n_dest == NULL){
                 return;
             }
-            destNode->node_num = dest;
-            destNode->edges = NULL;
-            destNode->next = *head;
-            *head = destNode;
+            n_dest->node_num = dest;
+            n_dest->edges = NULL;
+            n_dest->next = *head;
+            *head = n_dest;
         }
         int weight = -1;
         scanf("%d", &weight);
 
-        *lastEdge = (pedge)malloc(sizeof(edge));
-        if ((*lastEdge) == NULL)
-        {
+        *newEdge = (pedge)malloc(sizeof(edge));
+        if ((*newEdge) == NULL){
             return;
         }
-        (*lastEdge)->dest = destNode;
-        (*lastEdge)->weight = weight;
-        (*lastEdge)->next = NULL;
-        lastEdge = &((*lastEdge)->next);
-        isDone = scanf("%d", &dest);
+        (*newEdge)->weight = weight;
+        (*newEdge)->dest = n_dest;
+        (*newEdge)->next = NULL;
+        newEdge = &((*newEdge)->next);
+        j = scanf("%d", &dest);
     }
 }
 
 
 void printGraph_cmd(pnode head){
-    pnode tempNode = head;
-    while (tempNode != NULL)
+    pnode nodes = head;
+    while (nodes != NULL)
     {
-        printf("Node: %d ", tempNode->node_num);
-        pedge tempEdge = tempNode->edges;
-        while (tempEdge != NULL)
-        {
-            printf("dest: %d weight: %d ", tempEdge->dest->node_num,tempEdge->weight);
-            tempEdge = tempEdge->next;
+        printf("Node: %d ", nodes->node_num);
+        pedge edges = nodes->edges;
+        while (edges != NULL) {
+            printf("Edges: dest: %d weight: %d ", edges->dest->node_num,edges->weight);
+            edges = edges->next;
         }
-        tempNode = tempNode->next;
+        nodes = nodes->next;
     }
 }
 
@@ -186,11 +126,13 @@ void deleteGraph_cmd(pnode *head){
     *head=NULL;
 }
 
+
+
 void build_graph_cmd(pnode *head){
     deleteGraph_cmd(head);
     int size = 0;
     scanf("%d", &size);
-    char n = 'B';
+    char n = 'A';
     scanf("%c", &n);
     for (int i = 0; i < size; ++i)
     {
@@ -198,6 +140,7 @@ void build_graph_cmd(pnode *head){
         insert_node_cmd(head);
     }
 }
+
 
 
 
