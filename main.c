@@ -17,15 +17,15 @@ int main(){
             delete_node_cmd(head);
         }
         else if (index == 'S'){
-            int src=-1;
-            int dest=-1;
+            int src = -1;
+            int dest = -1;
             scanf("%d, %d\n", &src, &dest);
             int dist = shortsPath_cmd(*head,src,dest);
-            printf("the shortest path is: %d \n", dist);
+            printf("Dijsktra shortest path: %d \n", dist);
         }
         else if (index == 'T'){
             int tsp = TSP_cmd(*head);
-            printf("the TSP shortest path is: %d \n", tsp);
+            printf("TSP shortest path: %d \n", tsp);
         }
     }
     deleteGraph_cmd(head);

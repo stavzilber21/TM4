@@ -1,6 +1,6 @@
 #ifndef GRAPH_
 #define GRAPH_
-#define INF 99999999
+#define INFINITY 9999999
 
 typedef struct GRAPH_NODE_ *pnode;
 
@@ -17,14 +17,12 @@ typedef struct GRAPH_NODE_ {
     struct GRAPH_NODE_ *next;
 } node, *pnode;
 
-
-typedef struct dijkstra{
-    int weight;
-    int isIN;
+typedef struct Dijkstra {
     pnode node;
-    struct dijkstra *prev; 
-    struct dijkstra *next;
-} dij, *pdij;
+    int weight;
+    int tag;
+    struct Dijkstra *next;
+} dijkstra, *pdijkstra;
 
 
 pnode getNode(int id, pnode *head);

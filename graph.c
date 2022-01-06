@@ -16,26 +16,33 @@ pnode getNode(int id, pnode *head){
 }
 
 
-void delete_node_cmd(pnode *head){
-    int data = -1;
-    scanf("%d", &data);
-    pnode copy = *head;
-    if(!head){
-        return;
-    }
-    while(copy!=NULL){
-        if(copy->node_num==data){
-            pedge Edge = copy->edges;
-            while (Edge != NULL) {
-                pedge temp = Edge;
-                Edge = Edge->next;
-                free(temp);
-            } 
-        } 
-        else
-            copy = copy->next;
-    }
-    free(copy);  
+void delete_node_cmd(pnode *head){ 
+    int data;
+	scanf("%d", &data);
+	pnode copy = *head;
+	while (copy != NULL) {
+		if (copy->edges != NULL &&copy->edges->dest->node_num == data) {
+			pedge Redge = copy->edges;
+			copy->edges = copy->edges->next;
+			free(Redge);
+
+		}
+		copy = copy->next;
+	}
+	pnode temp = *head, next = *head;
+	next = temp->next;
+	while (next) {
+		if (next->node_num == data) {
+			temp->next = next->next;
+			free(next);
+			next = temp;
+
+		}
+		else {
+			temp = next;
+			next = temp->next;
+		}
+	}
 }
 
 

@@ -24,5 +24,3 @@ graphlib.a: dijkstra.o graph.o
 clean: 
 	rm -f *.o *.a graph
 
-
-

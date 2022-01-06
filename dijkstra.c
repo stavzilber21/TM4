@@ -5,93 +5,120 @@
 //In this class are the functions of shortest_path and tsp
 //There are several auxiliary functions for each function
 
+
 pnode graph;
 int weight;
 int len;
 
-////shortsPath
+////shortestPath
 
-void help1_toDeleltList(pdij list) { 
-    while (list != NULL){
-        pdij temp = list;
-        list = list->next;
-        free(temp);
-    }
-}
+pdijkstra use_Dijkstra(pdijkstra head, int id) 
+{
+    while (head != NULL) 
+    {
+        if (head->node->node_num == id) {
+            return head;
+        }
 
-
-pdij help2_build_dijkstra(pnode h_node, int x){
-    pdij head = NULL;
-    pdij *temp = &head;
-    while (h_node != NULL){
-        (*temp) = (pdij)malloc(sizeof(dij)); //allocate mamory
-        if ((*temp) == NULL){
-            return NULL;
-        }
-        (*temp)->node = h_node;
-        if (h_node->node_num == x){
-            (*temp)->prev = (*temp);
-            (*temp)->weight = 0;
-        }
-        else{
-            (*temp)->prev = NULL;
-            (*temp)->weight = INF;
-        }
-        (*temp)->isIN = 0;
-        (*temp)->next = NULL;
-        temp = &((*temp)->next);
-        h_node = h_node->next;
-    }
-    return head;
-}
-
-pdij help3_find_min(pdij head){
-    pdij result = NULL;
-    while (head != NULL){
-        if (!head->isIN && head->weight < INF 
-        && (result == NULL || result->weight < head->weight)){
-            result = head;
-        }
         head = head->next;
-    }
-    if (result != NULL){
-        result->isIN = 1;
-    }
-    return result;
-}
-
-
-pdij help4_getDijNode(int x, pdij List){
-    while (List != NULL){
-        if (List->node->node_num == x){
-            return List;
-        }
-        List = List->next;
     }
     return NULL;
 }
 
-int shortsPath_cmd(pnode head, int src, int dest){  //The main function
-    pdij list = help2_build_dijkstra(head, src);
-    pdij node_u = help3_find_min(list);;
-    while (node_u != NULL){
-        pedge Edge = node_u->node->edges;
-        while (Edge != NULL){
-            pdij node_v = help4_getDijNode(Edge->dest->node_num,list);
-            int dist = node_u->weight + Edge->weight;
-            if (node_v->weight > dist){
-                node_v->weight = dist;
-                node_v->prev = node_u;
-            }
-            Edge = Edge->next;
-        }
-        node_u = help3_find_min(list);
+void del_Dijk(pdijkstra dijkstra) 
+{
+    while (dijkstra != NULL)
+    {
+        pdijkstra temp = dijkstra;
+        dijkstra = dijkstra->next;
+        free(temp);
     }
-    int res = help4_getDijNode(dest,list)->weight;
-    res = (res == INF)? -1: res;
-    help1_toDeleltList(list);
-    return res;
 }
+
+pdijkstra min(pdijkstra head) 
+{
+    pdijkstra Node = NULL;
+
+    while (head != NULL) 
+    {
+        if (!head->tag && head->weight < INFINITY && (Node == NULL || Node->weight < head->weight)) 
+        {
+            Node = head;
+        }
+        head = head->next;
+    }
+    if (Node != NULL) 
+    {
+        Node->tag = 1;
+    }
+    return Node;
+}
+
+pdijkstra RunDijkstra(pnode open, int src) 
+{
+    pdijkstra head = NULL;
+    pdijkstra *n = &head;
+
+    while (open != NULL) 
+    {
+        (*n) = (pdijkstra) malloc(sizeof(dijkstra));
+        if ((*n) == NULL) 
+        {
+            exit(0);
+        }
+
+        (*n)->node = open;
+        if (open->node_num == src)
+        {
+            (*n)->weight = 0;
+        } 
+        else 
+        {
+            (*n)->weight = INFINITY;
+        }
+        (*n)->tag = 0;
+        (*n)->next = NULL;
+        n = &((*n)->next);
+        open = open->next;
+    }
+    return head;
+}
+
+
+int shortsPath_cmd(pnode head, int src, int dest) 
+{
+    pdijkstra dijkstraHead = RunDijkstra(head, src);
+    pdijkstra temp = min(dijkstraHead);
+    
+    while (temp != NULL) 
+    {
+        pedge E_ind = temp->node->edges;
+
+        while (E_ind != NULL) 
+        {
+            pdijkstra n = use_Dijkstra(dijkstraHead, E_ind->dest->node_num);
+
+            int res = temp->weight + E_ind->weight;
+            if (n->weight > res)
+            {
+                n->weight = res;
+            }
+            E_ind = E_ind->next;
+        }
+        temp = min(dijkstraHead);
+    }
+    
+    int D = use_Dijkstra(dijkstraHead, dest)->weight;
+    
+    if (D == INFINITY)
+    {
+        D = -1;
+    }
+    del_Dijk(dijkstraHead);
+    
+    return D;
+}
+
 
 
 
@@ -109,7 +136,7 @@ void permutation_array(int* arr, int len){
     for (int i = 0; i < len-1; ++i){
         int dist = shortsPath_cmd(graph,arr[i], arr[i+1]);
         if (dist == -1){
-            curr = INF;
+            curr = INFINITY;
             return;
         }
         curr += dist;
@@ -141,7 +168,7 @@ void permutation( int index ,int* arr, int len){
 }
 
 int TSP_cmd(pnode head){   ////The main function
-    weight = INF;
+    weight = INFINITY ;
 	len = 0;
     graph = head;
     scanf("%d", &len);
@@ -155,11 +182,12 @@ int TSP_cmd(pnode head){   ////The main function
     permutation(0,newArr,len);
     free(arr);
     free(newArr);
-    if (weight == INF){
+    if (weight == INFINITY){
         weight = -1;
     }
     return weight;
 }
+
 
 
 
