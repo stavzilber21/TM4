@@ -2,6 +2,19 @@
 #include "graph.h"
 #include <stdlib.h>
 
+void build_graph_cmd(pnode *head){
+    deleteGraph_cmd(head);
+    int size = 0;
+    scanf("%d", &size);
+    char n = 'A';
+    scanf("%c", &n);
+    for (int i = 0; i < size; ++i)
+    {
+        scanf("%c", &n);
+        insert_node_cmd(head);
+    }
+}
+
 
 pnode getNode(int id, pnode *head){
     pnode copy = *head;
@@ -103,17 +116,18 @@ void insert_node_cmd(pnode *head){
 
 
 void printGraph_cmd(pnode head){
-    pnode nodes = head;
-    while (nodes != NULL)
-    {
-        printf("Node: %d ", nodes->node_num);
-        pedge edges = nodes->edges;
-        while (edges != NULL) {
-            printf("Edges: dest: %d weight: %d ", edges->dest->node_num,edges->weight);
-            edges = edges->next;
+    pnode n = head; 
+    while (n != NULL){
+        printf("Node %d: ", n->node_num); 
+        pedge e = n->edges;
+        while (e != NULL){
+            printf("D= %d: W= %d, ", e->dest->node_num, e->weight); 
+            e = e->next;
         }
-        nodes = nodes->next;
+        printf("\n");
+        n = n->next;
     }
+
 }
 
 
@@ -135,18 +149,7 @@ void deleteGraph_cmd(pnode *head){
 
 
 
-void build_graph_cmd(pnode *head){
-    deleteGraph_cmd(head);
-    int size = 0;
-    scanf("%d", &size);
-    char n = 'A';
-    scanf("%c", &n);
-    for (int i = 0; i < size; ++i)
-    {
-        scanf("%c", &n);
-        insert_node_cmd(head);
-    }
-}
+
 
 
 

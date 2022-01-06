@@ -12,111 +12,86 @@ int len;
 
 ////shortestPath
 
-pdijkstra use_Dijkstra(pdijkstra head, int id) 
-{
-    while (head != NULL) 
-    {
-        if (head->node->node_num == id) {
-            return head;
-        }
-
-        head = head->next;
-    }
-    return NULL;
-}
-
-void del_Dijk(pdijkstra dijkstra) 
-{
-    while (dijkstra != NULL)
-    {
-        pdijkstra temp = dijkstra;
-        dijkstra = dijkstra->next;
+void help1_toDeleltList(pdij list) { 
+    while (list != NULL){
+        pdij temp = list;
+        list = list->next;
         free(temp);
     }
 }
 
-pdijkstra min(pdijkstra head) 
-{
-    pdijkstra Node = NULL;
 
-    while (head != NULL) 
+pdij help2_build_dijkstra(pnode h_node, int x){
+    pdij head = NULL;
+    pdij *temp = &head;
+    while (h_node != NULL)
     {
-        if (!head->tag && head->weight < INFINITY && (Node == NULL || Node->weight < head->weight)) 
-        {
-            Node = head;
+        (*temp) = (pdij)malloc(sizeof(dij)); //allocate mamory
+        if ((*temp) == NULL){
+            return NULL;
         }
-        head = head->next;
-    }
-    if (Node != NULL) 
-    {
-        Node->tag = 1;
-    }
-    return Node;
-}
-
-pdijkstra RunDijkstra(pnode open, int src) 
-{
-    pdijkstra head = NULL;
-    pdijkstra *n = &head;
-
-    while (open != NULL) 
-    {
-        (*n) = (pdijkstra) malloc(sizeof(dijkstra));
-        if ((*n) == NULL) 
-        {
-            exit(0);
+        (*temp)->node = h_node;
+        if (h_node->node_num == x){
+            (*temp)->prev = (*temp);
+            (*temp)->weight = 0;
         }
-
-        (*n)->node = open;
-        if (open->node_num == src)
-        {
-            (*n)->weight = 0;
-        } 
-        else 
-        {
-            (*n)->weight = INFINITY;
+        else{
+            (*temp)->prev = NULL;
+            (*temp)->weight = INFINITY ;
         }
-        (*n)->tag = 0;
-        (*n)->next = NULL;
-        n = &((*n)->next);
-        open = open->next;
+        (*temp)->isIN = 0;
+        (*temp)->next = NULL;
+        temp = &((*temp)->next);
+        h_node = h_node->next;
     }
     return head;
 }
 
-
-int shortsPath_cmd(pnode head, int src, int dest) 
-{
-    pdijkstra dijkstraHead = RunDijkstra(head, src);
-    pdijkstra temp = min(dijkstraHead);
-    
-    while (temp != NULL) 
-    {
-        pedge E_ind = temp->node->edges;
-
-        while (E_ind != NULL) 
-        {
-            pdijkstra n = use_Dijkstra(dijkstraHead, E_ind->dest->node_num);
-
-            int res = temp->weight + E_ind->weight;
-            if (n->weight > res)
-            {
-                n->weight = res;
-            }
-            E_ind = E_ind->next;
+pdij help3_find_min(pdij head){
+    pdij result = NULL;
+    while (head != NULL){
+        if (!head->isIN && head->weight < INFINITY  && (result == NULL || result->weight < head->weight)){
+            result = head;
         }
-        temp = min(dijkstraHead);
+        head = head->next;
     }
-    
-    int D = use_Dijkstra(dijkstraHead, dest)->weight;
-    
-    if (D == INFINITY)
-    {
-        D = -1;
+    if (result != NULL){
+        result->isIN = 1;
     }
-    del_Dijk(dijkstraHead);
-    
-    return D;
+    return result;
+}
+
+
+pdij help4_getDijNode(int x, pdij List){
+    while (List != NULL){
+        if (List->node->node_num == x){
+            return List;
+        }
+        List = List->next;
+    }
+    return NULL;
+}
+
+int shortsPath_cmd(pnode head, int src, int dest){  //The main function
+    pdij list = help2_build_dijkstra(head, src);
+    pdij node_u = help3_find_min(list);
+    while (node_u != NULL){
+        pedge Edge = node_u->node->edges;
+        while (Edge != NULL){
+            pdij node_v = help4_getDijNode(Edge->dest->node_num,list);
+            int dist = node_u->weight + Edge->weight;
+            if (node_v->weight > dist){
+                node_v->weight = dist;
+                node_v->prev = node_u;
+            }
+            Edge = Edge->next;
+        }
+        node_u = help3_find_min(list);
+    }
+    int res = help4_getDijNode(dest,list)->weight;
+    res = (res == INFINITY )? -1: res;
+    help1_toDeleltList(list);
+    return res;
 }
 
 

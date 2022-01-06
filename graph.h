@@ -17,12 +17,14 @@ typedef struct GRAPH_NODE_ {
     struct GRAPH_NODE_ *next;
 } node, *pnode;
 
-typedef struct Dijkstra {
+typedef struct Dijkstra_Node
+{
     pnode node;
     int weight;
-    int tag;
-    struct Dijkstra *next;
-} dijkstra, *pdijkstra;
+    int isIN;
+    struct Dijkstra_Node *prev;
+    struct Dijkstra_Node *next;
+} dij, *pdij;
 
 
 pnode getNode(int id, pnode *head);
